@@ -1,19 +1,26 @@
 #!/bin/bash
+
 sudo useradd -m -d /opt/tomcat -U -s /bin/false tomcat
+
 sudo apt update
 sudo apt install openjdk-17-jdk -y
 sudo apt install default-jdk -y
+
 cd /tmp
 wget https://dlcdn.apache.org/tomcat/tomcat-10/v10.0.20/bin/apache-tomcat-10.0.20.tar.gz
-sudo tar xzvf /tmp/apache-tomcat-10*tar.gz -C /opt/tomcat --strip-components=1
+
+sudo tar xzvf /tmp/apache-tomcat-10.0.20.tar.gz -C /opt/tomcat --strip-components=1
 sudo chown -R tomcat:tomcat /opt/tomcat/
 sudo chmod -R u+x /opt/tomcat/bin
+
 sudo sed -i '/<\/tomcat-users>/i \
   <role rolename="manager-gui" /> \
   <user username="manager" password="pass" roles="manager-gui" /> \
-  \<role rolename="admin-gui" /> \<user username="admin" password="pass" roles="manager-gui,admin-gui" />' /opt/tomcat/conf/tomcat-users.xml
-sudo sed -i '/<Valve className="org.apache.catalina.valves.RemoteAddrValve" allow="127\\.\d+\.\d+\.\d\+|::1|0:0:0:0:0:0:0:1"/ s/^/<!--/;s/$/-->/' /opt/tomcat/webapps/manager/META-INF/context.xml
-sudo sed -i '/<Valve className="org.apache.catalina.valves.RemoteAddrValve" allow="127\\.\d+\.\d+\.\d\+|::1|0:0:0:0:0:0:0:1"/ s/^/<!--/;s/$/-->/' /opt/tomcat/webapps/host-manager/META-INF/context.xml
+  <role rolename="admin-gui" /> <user username="admin" password="pass" roles="manager-gui,admin-gui" />' /opt/tomcat/conf/tomcat-users.xml
+
+sudo sed -i '/<Valve className="org.apache.catalina.valves.RemoteAddrValve" allow="127\\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1"/ s/^/<!--/;s/$/-->/' /opt/tomcat/webapps/manager/META-INF/context.xml
+sudo sed -i '/<Valve className="org.apache.catalina.valves.RemoteAddrValve" allow="127\\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1"/ s/^/<!--/;s/$/-->/' /opt/tomcat/webapps/host-manager/META-INF/context.xml
+
 sudo tee /etc/systemd/system/tomcat.service > /dev/null <<EOL
 [Unit]
 Description=Tomcat
@@ -21,7 +28,6 @@ After=network.target
 
 [Service]
 Type=forking
-
 User=tomcat
 Group=tomcat
 
@@ -41,6 +47,7 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOL
+
 sudo systemctl daemon-reload
 sudo systemctl start tomcat
 sudo systemctl enable tomcat
