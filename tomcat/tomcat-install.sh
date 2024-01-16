@@ -12,8 +12,8 @@ sudo sed -i '/<\/tomcat-users>/i \
   <role rolename="manager-gui" /> \
   <user username="manager" password="pass" roles="manager-gui" /> \
   \<role rolename="admin-gui" /> \<user username="admin" password="pass" roles="manager-gui,admin-gui" />' /opt/tomcat/conf/tomcat-users.xml
-sudo sed -i '/<Valve className="org.apache.catalina.valves.RemoteAddrValve" allow="127\\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1""/ s/^/<!--/;s/$/-->/' /opt/tomcat/webapps/manager/META-INF/context.xml
-sudo sed -i '/<Valve className="org.apache.catalina.valves.RemoteAddrValve" allow="127\\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1""/ s/^/<!--/;s/$/-->/' /opt/tomcat/webapps/host-manager/META-INF/context.xml
+sudo sed -i '/<Valve className="org.apache.catalina.valves.RemoteAddrValve" allow="127\\.\d+\.\d+\.\d\+|::1|0:0:0:0:0:0:0:1"/ s/^/<!--/;s/$/-->/' /opt/tomcat/webapps/manager/META-INF/context.xml
+sudo sed -i '/<Valve className="org.apache.catalina.valves.RemoteAddrValve" allow="127\\.\d+\.\d+\.\d\+|::1|0:0:0:0:0:0:0:1"/ s/^/<!--/;s/$/-->/' /opt/tomcat/webapps/host-manager/META-INF/context.xml
 sudo tee /etc/systemd/system/tomcat.service > /dev/null <<EOL
 [Unit]
 Description=Tomcat
