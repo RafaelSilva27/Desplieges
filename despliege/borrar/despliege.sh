@@ -6,6 +6,6 @@ export AWS_SESSION_TOKEN=
 export AWS_DEFAULT_REGION=us-east-1
 
 aws cloudformation deploy \
---template-file apache-tomcat-daweb/basic-stack-yaml/main.yml \
+--template-file Desplieges/YML/main.yml \
 --stack-name "tomcat" \
 --capabilities CAPABILITY_NAMED_IAM
