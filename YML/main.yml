@@ -1,5 +1,9 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'Plantilla para crear grupo de seguridad'
+Parameters:
+  InstanceType:
+    Type: String
+    Default: t2.micro
 Resources:
   ApplicationServerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -27,10 +31,10 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       ImageId: ami-06aa3f7caf3a30282
-      InstanceType: t2.medium
+      InstanceType: !Ref InstanceType
       KeyName: vockey
       SecurityGroups:
-        - Ref: ApplicationServerSecurityGroup
+        - !Ref ApplicationServerSecurityGroup
       Tags:
         - Key: Name
           Value: "ServerPilaRSA"
