@@ -4,14 +4,6 @@ Parameters:
   InstanceType:
     Type: String
     Default: t2.micro
-    AllowedValues:
-      - t2.micro
-      - t2.small
-      - t2.medium
-      - t2.large
-  EC2OS:
-    Type: String
-    Default:
 Resources:
   ApplicationServerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -40,14 +32,7 @@ Resources:
     Properties:
       ImageId: ami-06aa3f7caf3a30282
       InstanceType: !Ref InstanceType
-      ImageId: !Ref EC2OS
       KeyName: vockey
-      UserData:
-        Fn::Base64: |
-          #!/bin/bash -xe
-          apt update -y
-          cd ~
-          mkdir deployment
       SecurityGroups:
         - !Ref ApplicationServerSecurityGroup
       Tags:
