@@ -68,7 +68,7 @@ Parameters:
     - cr1.8xlarge
     - cc2.8xlarge
     - cg1.4xlarge
-    ConstraintDescription: Tipos de instancia validas
+    ConstraintDescription: Tipos de instancia válidos
   SSHLocation:
     Description: The IP address range that can be used to SSH to the EC2 instances
     Type: String
@@ -76,7 +76,7 @@ Parameters:
     MaxLength: '18'
     Default: 0.0.0.0/0
     AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
-    ConstraintDescription: must be a valid IP CIDR range of the form x.x.x.x/x.
+    ConstraintDescription: Debe ser un rango de IP CIDR válido en el formato x.x.x.x/x.
 Resources:
   EC2Instance:
     Type: AWS::EC2::Instance
@@ -186,13 +186,13 @@ Resources:
           chown -R tomcat:tomcat /opt/tomcat/
           chmod -R u+x /opt/tomcat/bin
           echo -e '<tomcat-users xmlns="http://tomcat.apache.org/xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:schemaLocation="http://tomcat.apache.org/xml tomcat-users.xsd">\n  <role rolename="manager-gui" />\n  <user username="manager" password="secret" roles="manager-gui" />\n  <role rolename="admin-gui" />\n  <user username="admin" password="secret" roles="manager-gui,admin-gui" />\n</tomcat-users>' | tee /opt/tomcat/conf/tomcat-users.xml > /dev/null
-          sed -i '/<Valve/,/<\/Valve>/ s/^/<!--/' /opt/tomcat/webapps/manager/META-INF/context.xml
-          sed -i '/<Valve/,/<\/Valve>/ s/$/-->/' /opt/tomcat/webapps/manager/META-INF/context.xml
+          sed -i '/<Valve/,/<\/Valve>/ s/^<!--//' /opt/tomcat/webapps/manager/META-INF/context.xml
+          sed -i '/<Valve/,/<\/Valve>/ s/-->//' /opt/tomcat/webapps/manager/META-INF/context.xml
           JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:/bin/java::")
           echo -e "[Unit]\nDescription=Tomcat\nAfter=network.target\n\n[Service]\nType=forking\nUser=tomcat\nGroup=tomcat\nEnvironment=\"JAVA_HOME=$JAVA_HOME\"\nEnvironment=\"JAVA_OPTS=-Djava.security.egd=file:///dev/urandom\"\nEnvironment=\"CATALINA_BASE=/opt/tomcat\"\nEnvironment=\"CATALINA_HOME=/opt/tomcat\"\nEnvironment=\"CATALINA_PID=/opt/tomcat/temp/tomcat.pid\"\nEnvironment=\"CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC\"\n\nExecStart=/opt/tomcat/bin/startup.sh\nExecStop=/opt/tomcat/bin/shutdown.sh\n\nRestartSec=10\nRestart=always\n\n[Install]\nWantedBy=multi-user.target" | tee /etc/systemd/system/tomcat.service > /dev/null
           systemctl daemon-reload
           systemctl enable tomcat.service
-          # Esta tiene que serla ultima instrucción
+          # Esta tiene que ser la última instrucción
           /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource EC2Instance --region ${AWS::Region}
       Tags:
         - Key: Name
@@ -215,4 +215,3 @@ Resources:
       Tags:
         - Key: Name
           Value: !Ref AWS::StackName
-
