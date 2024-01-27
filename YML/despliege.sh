@@ -11,7 +11,7 @@ aws cloudformation deploy \
 	--region us-east-1 \
 	--profile default \
 	--stack-name awsbootstrap \
-	--template-file main.yml \
+	--template-file ubuntu.yml \
 	--no-fail-on-empty-changeset \
 	--capabilities CAPABILITY_NAMED_IAM \
 	--parameter-override EC2InstanceType=$EC2_INSTANCE_TYPE
