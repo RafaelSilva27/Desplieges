@@ -191,6 +191,7 @@ Resources:
           JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:/bin/java::")
           echo -e "[Unit]\nDescription=Tomcat\nAfter=network.target\n\n[Service]\nType=forking\nUser=tomcat\nGroup=tomcat\nEnvironment=\"JAVA_HOME=$JAVA_HOME\"\nEnvironment=\"JAVA_OPTS=-Djava.security.egd=file:///dev/urandom\"\nEnvironment=\"CATALINA_BASE=/opt/tomcat\"\nEnvironment=\"CATALINA_HOME=/opt/tomcat\"\nEnvironment=\"CATALINA_PID=/opt/tomcat/temp/tomcat.pid\"\nEnvironment=\"CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC\"\n\nExecStart=/opt/tomcat/bin/startup.sh\nExecStop=/opt/tomcat/bin/shutdown.sh\n\nRestartSec=10\nRestart=always\n\n[Install]\nWantedBy=multi-user.target" | tee /etc/systemd/system/tomcat.service > /dev/null
           systemctl daemon-reload
+          systemctl start tomcat
           systemctl enable tomcat.service
           # Esta tiene que ser la última instrucción
           /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource EC2Instance --region ${AWS::Region}
