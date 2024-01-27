@@ -178,17 +178,17 @@ Resources:
             echo "El usuario 'tomcat' ya existe. No es necesario crearlo de nuevo."
           else
           # Agregar un nuevo usuario llamado 'tomcat' con las opciones especificadas
-           useradd -m -d /opt/tomcat -U -s /bin/false tomcat
+          useradd -m -d /opt/tomcat -U -s /bin/false tomcat
           fi
           cd /tmp
           wget https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.18/bin/apache-tomcat-10.1.18.tar.gz -O tomcat.tar.gz
           tar xzvf tomcat.tar.gz -C /opt/tomcat --strip-components=1
           chown -R tomcat:tomcat /opt/tomcat/
           chmod -R u+x /opt/tomcat/bin
-          echo -e '<tomcat-users xmlns="http://tomcat.apache.org/xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:schemaLocation="http://tomcat.apache.org/xml tomcat-users.xsd">\n  <role rolename="manager-gui" />\n  <user username="manager" password="secret" roles="manager-gui" />\n  <role rolename="admin-gui" />\n  <user username="admin" password="secrete" roles="manager-gui,admin-gui" />\n</tomcat-users>' | tee /opt/tomcat/conf/tomcat-users.xml > /dev/null
+          echo -e '<tomcat-users xmlns="http://tomcat.apache.org/xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:schemaLocation="http://tomcat.apache.org/xml tomcat-users.xsd">\n  <role rolename="manager-gui" />\n  <user username="manager" password="secret" roles="manager-gui" />\n  <role rolename="admin-gui" />\n  <user username="admin" password="secret" roles="manager-gui,admin-gui" />\n</tomcat-users>' | tee /opt/tomcat/conf/tomcat-users.xml > /dev/null
           sed -i '/<Valve/,/<\/Valve>/ s/^/<!--/' /opt/tomcat/webapps/manager/META-INF/context.xml
           sed -i '/<Valve/,/<\/Valve>/ s/$/-->/' /opt/tomcat/webapps/manager/META-INF/context.xml
-          JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")
+          JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:/bin/java::")
           echo -e "[Unit]\nDescription=Tomcat\nAfter=network.target\n\n[Service]\nType=forking\nUser=tomcat\nGroup=tomcat\nEnvironment=\"JAVA_HOME=$JAVA_HOME\"\nEnvironment=\"JAVA_OPTS=-Djava.security.egd=file:///dev/urandom\"\nEnvironment=\"CATALINA_BASE=/opt/tomcat\"\nEnvironment=\"CATALINA_HOME=/opt/tomcat\"\nEnvironment=\"CATALINA_PID=/opt/tomcat/temp/tomcat.pid\"\nEnvironment=\"CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC\"\n\nExecStart=/opt/tomcat/bin/startup.sh\nExecStop=/opt/tomcat/bin/shutdown.sh\n\nRestartSec=10\nRestart=always\n\n[Install]\nWantedBy=multi-user.target" | tee /etc/systemd/system/tomcat.service > /dev/null
           systemctl daemon-reload
           systemctl enable tomcat.service
