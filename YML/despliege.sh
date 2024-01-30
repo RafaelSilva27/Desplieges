@@ -19,5 +19,5 @@ aws cloudformation deploy \
 	if [ $? -eq 0 ]; then
 	aws cloudformation list-exports \
 	--profile awsbootstrap \
-	--query "Exports[?Name=='InstanceEndpoint'].Value"
+	--query "Exports[?Name=='EC2Instance'].Value"
 	fi
