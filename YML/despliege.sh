@@ -15,3 +15,9 @@ aws cloudformation deploy \
 	--no-fail-on-empty-changeset \
 	--capabilities CAPABILITY_NAMED_IAM \
 	--parameter-override EC2InstanceType=$EC2_INSTANCE_TYPE
+
+	if [ $? -eq 0 ]; then
+	aws cloudformation list-exports \
+	--profile awsbootstrap \
+	--query "Exports[?Name=='InstanceEndpoint'].Value"
+	fi

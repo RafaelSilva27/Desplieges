@@ -216,3 +216,15 @@ Resources:
       Tags:
         - Key: Name
           Value: !Ref AWS::StackName
+Outputs:
+  EC2Instance:
+    Description: Instancia EC2 creada
+    Value:
+      Ref: EC2Instance
+  URL:
+    Description: URL del sitio web
+    Value: !Sub 'http://${EC2Instance.PublicDnsName}:8080'
+  KeyName:
+    Description: Nombre de la llave de acceso
+    Value: !Ref KeyName
+  
