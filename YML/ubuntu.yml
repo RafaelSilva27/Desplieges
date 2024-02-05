@@ -193,6 +193,17 @@ Resources:
           systemctl daemon-reload
           systemctl start tomcat
           systemctl enable tomcat.service
+
+          # Despliege
+          systemctl stop tomcat
+          cd /tmp
+          mkdir primeraApp
+          git clone https://github.com/DavidHormigoRamirez/springholamundo
+          chmod +x gradlew
+          bash gradlew war
+          mv build/libs/holamundo-0.0.1-SNAPSHOT-plain.war /opt/tomcat/webapps/holamundo-0.0.1-SNAPSHOT-plain.war
+          systemctl start tomcat
+          
           # Esta tiene que ser la última instrucción
           /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource EC2Instance --region ${AWS::Region}
       Tags:
