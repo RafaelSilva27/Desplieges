@@ -198,7 +198,9 @@ Resources:
           systemctl stop tomcat
           cd /tmp
           mkdir primeraApp
+          cd primeraApp
           git clone https://github.com/DavidHormigoRamirez/springholamundo
+          cd springholamundo
           chmod +x gradlew
           bash gradlew war
           mv build/libs/holamundo-0.0.1-SNAPSHOT-plain.war /opt/tomcat/webapps/holamundo-0.0.1-SNAPSHOT-plain.war
